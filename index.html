@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>MNEMO-CORE | Intelligence Architecture</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            mnemo: {
+              primary: '#F97316', // Vibrant Orange
+              secondary: '#FB923C',
+              dark: '#0F172A',
+              bg: 'var(--mnemo-bg)', // Deep Blue/Black for Dark Mode
+              card: 'var(--mnemo-card)',
+              border: 'var(--mnemo-border)',
+              text: {
+                base: 'var(--mnemo-text-base)',
+                muted: 'var(--mnemo-text-muted)'
+              }
+            }
+          },
+          fontFamily: {
+            sans: ['Outfit', 'Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --mnemo-primary: #F97316;
+      --mnemo-bg: #F5F2EA;
+      /* Soft Cream/Eggshell */
+      --mnemo-card: rgba(255, 255, 255, 0.6);
+      --mnemo-border: rgba(0, 0, 0, 0.04);
+      --mnemo-text-base: #334155;
+      /* Soft Slate */
+      --mnemo-text-muted: #64748B;
+      --glass-bg: rgba(255, 255, 255, 0.6);
+      --glass-border: rgba(0, 0, 0, 0.04);
+      --card-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.02);
+    }
+
+    .dark {
+      --mnemo-bg: #0F172A;
+      --mnemo-card: rgba(30, 41, 59, 0.7);
+      --mnemo-border: rgba(255, 255, 255, 0.1);
+      --mnemo-text-base: #F8FAFC;
+      --mnemo-text-muted: #94A3B8;
+      --glass-bg: rgba(30, 41, 59, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+      background-color: var(--mnemo-bg);
+      font-family: 'Outfit', sans-serif;
+      color: var(--mnemo-text-base);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
+    }
+
+    /* Glassmorphism Classes */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--card-shadow);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-light {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .dark .glass-light {
+      background: rgba(30, 41, 59, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--mnemo-bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #94A3B8;
+      border-radius: 10px;
+    }
+
+    .dark ::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #F97316;
+    }
+
+    /* Animations */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-slideIn {
+      animation: slideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+  </style>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.10.1",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0"
+  }
+}
+</script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>
