@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Grid3X3, Type, Layers, UserSquare2, Image as ImageIcon, TrendingUp, Zap, ArrowRight, Award } from 'lucide-react';
+import { Grid3X3, Type, Layers, UserSquare2, Image as ImageIcon, TrendingUp, Zap, ArrowRight, Award, Target } from 'lucide-react';
 import { ExerciseType } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 
