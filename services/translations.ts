@@ -28,6 +28,9 @@ export const translations: Translations = {
     averageAccuracy: { uz: 'O\'rtacha Aniqlik', ru: 'Средняя точность', en: 'Average Accuracy' },
     days: { uz: 'kun', ru: 'дней', en: 'days' },
     top5: { uz: 'Eng yaxshi 5%', ru: 'Топ 5%', en: 'Top 5%' },
+    statDiscipline: { uz: 'Kunlik harakatlar va intizom', ru: 'Ежедневные действия и дисциплина', en: 'Daily actions and discipline' },
+    statTimeLimit: { uz: 'Kuniga 1-2 soat vaqt ajratish', ru: 'Выделять 1-2 часа в день', en: 'Spend 1-2 hours a day' },
+    statProgress: { uz: '75% dan 100% gacha natija', ru: 'Результат от 75% до 100%', en: '75% to 100% progress' },
 
     // Exercises
     numberMatrix: { uz: 'Raqamlar matritsasi', ru: 'Матрица чисел', en: 'Number Matrix' },
@@ -78,9 +81,6 @@ export const translations: Translations = {
     comparisonAnalysis: { uz: 'Solishtirma tahlil', ru: 'Сравнительный анализ', en: 'Comparison Analysis' },
     originalSequence: { uz: 'Asl ketma-ketlik', ru: 'Оригинальная последовательность', en: 'Original Sequence' },
     yourResponse: { uz: 'Sizning javobingiz', ru: 'Ваш ответ', en: 'Your Response' },
-    aiCoach: { uz: 'AI Murabbiy', ru: 'AI Коуч', en: 'AI Coach' },
-    aiCoachDesc: { uz: 'Xotirani yaxshilash bo\'yicha maslahatlar', ru: 'Советы по улучшению памяти', en: 'Memory improvement tips' },
-    getAiTip: { uz: 'AI maslahatini olish', ru: 'Получить совет AI', en: 'Get AI Tip' },
     playAgain: { uz: 'Qayta o\'ynash', ru: 'Играть снова', en: 'Play Again' },
     neuralArena: { uz: 'Neyron Arena', ru: 'Нейро Арена', en: 'Neural Arena' },
     chainMethod: { uz: 'Zanjir usuli', ru: 'Метод цепочки', en: 'Chain Method' },

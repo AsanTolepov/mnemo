@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Play, Eye, EyeOff, RotateCcw, ArrowRight, CheckCircle2, AlertCircle, Lightbulb, Brain, Zap } from 'lucide-react';
 import { Button } from '../components/Button';
 import { NumberConfig, GameState } from '../types';
-import { generateMnemonicTip } from '../services/geminiService';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { saveTrainingResult } from '../services/firebaseService';
@@ -26,8 +25,6 @@ export const NumberArena: React.FC = () => {
   const [userInput, setUserInput] = useState<string>('');
   const [timeLeft, setTimeLeft] = useState<number>(config.durationSeconds);
   const [score, setScore] = useState<number>(0);
-  const [aiTip, setAiTip] = useState<{ technique: string, text: string } | null>(null);
-  const [isLoadingTip, setIsLoadingTip] = useState(false);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -47,7 +44,6 @@ export const NumberArena: React.FC = () => {
     setUserInput('');
     setTimeLeft(config.durationSeconds);
     setGameState(GameState.PREPARE);
-    setAiTip(null);
   };
 
   const startGame = () => {
@@ -87,18 +83,6 @@ export const NumberArena: React.FC = () => {
       saveTrainingResult(user.uid, 'numberMatrix', matches, numbers.length)
         .catch(err => console.error("Error saving session:", err));
     }
-
-    // If score is low, trigger AI Coach automatically
-    if (calculatedScore < 100) {
-      fetchAiTip();
-    }
-  };
-
-  const fetchAiTip = async () => {
-    setIsLoadingTip(true);
-    const tip = await generateMnemonicTip(numbers);
-    setAiTip(tip);
-    setIsLoadingTip(false);
   };
 
   // Cleanup timer
@@ -293,42 +277,6 @@ export const NumberArena: React.FC = () => {
         </div>
       </div>
 
-      {/* AI Coach Section */}
-      {score < 100 && (
-        <div className="bg-gradient-to-br from-mnemo-primary/20 to-transparent p-8 md:p-12 rounded-[2.5rem] border border-mnemo-primary/20 relative overflow-hidden glass shadow-2xl group">
-          <div className="absolute top-0 right-0 p-8 text-mnemo-primary/10 group-hover:text-mnemo-primary/20 transition-colors">
-            <Zap size={120} />
-          </div>
-          <div className="flex flex-col md:flex-row items-start gap-8 relative z-10">
-            <div className="p-4 glass rounded-2xl text-mnemo-primary shadow-xl">
-              <Lightbulb size={32} />
-            </div>
-            <div className="flex-1 space-y-4">
-              <div className="space-y-1">
-                <h3 className="text-2xl font-black text-mnemo-text-base tracking-tight leading-none">{t('aiCoach')}</h3>
-                <p className="text-mnemo-text-muted text-sm font-medium">{t('aiCoachDesc')}</p>
-              </div>
-              {isLoadingTip ? (
-                <div className="animate-pulse space-y-3 pt-2">
-                  <div className="h-4 bg-white/10 rounded-full w-3/4"></div>
-                  <div className="h-4 bg-white/10 rounded-full w-1/2"></div>
-                </div>
-              ) : aiTip ? (
-                <div className="space-y-6 pt-2">
-                  <div className="inline-block px-3 py-1 bg-mnemo-primary/20 border border-mnemo-primary/30 rounded-lg text-[10px] font-black text-mnemo-primary uppercase tracking-widest">
-                    {aiTip.technique}
-                  </div>
-                  <p className="text-lg text-mnemo-text-base font-medium leading-relaxed italic">
-                    "{aiTip.text}"
-                  </p>
-                </div>
-              ) : (
-                <Button variant="ghost" className="text-mnemo-primary font-bold hover:bg-mnemo-primary/10 px-0" onClick={fetchAiTip}>{t('getAiTip')} →</Button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6">
         <Button variant="secondary" onClick={() => navigate('/')} className="h-16 glass-light border-white/10 text-mnemo-text-base font-bold rounded-2xl">{t('controlCenter')}</Button>

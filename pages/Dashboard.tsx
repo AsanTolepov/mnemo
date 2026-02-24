@@ -61,9 +61,9 @@ export const Dashboard: React.FC = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {[
-          { label: t('currentStreak'), value: `12 ${t('days')}`, icon: Zap, color: 'text-orange-400', bg: 'bg-orange-400/10' },
-          { label: t('globalRanking'), value: t('top5'), icon: TrendingUp, color: 'text-blue-400', bg: 'bg-blue-400/10' },
-          { label: t('averageAccuracy'), value: '94.2%', icon: Layers, color: 'text-emerald-400', bg: 'bg-emerald-400/10' }
+          { label: t('currentStreak'), value: t('statDiscipline'), icon: Zap, color: 'text-orange-400', bg: 'bg-orange-400/10' },
+          { label: t('averageAccuracy'), value: t('statProgress'), icon: Award, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
+          { label: t('speed'), value: t('statTimeLimit'), icon: Target, color: 'text-blue-400', bg: 'bg-blue-400/10' }
         ].map((stat, i) => (
           <div key={i} className="glass p-8 rounded-3xl flex items-center gap-6 hover:scale-[1.02] transition-transform duration-300">
             <div className={`p-4 ${stat.bg} ${stat.color} rounded-2xl shadow-inner`}>

@@ -314,9 +314,9 @@ export const FaceName: React.FC = () => {
         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white shadow-lg mb-4">
           <UserSquare2 className="w-10 h-10 text-mnemo-primary" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900">{t('resultsTitle')}</h2>
+        <h2 className="text-3xl font-bold text-mnemo-text-base">{t('resultsTitle')}</h2>
         <div className="text-6xl font-bold text-mnemo-primary">{score}%</div>
-        <p className="text-gray-500">{t('accuracyIndicator')}</p>
+        <p className="text-mnemo-text-muted">{t('accuracyIndicator')}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -326,7 +326,7 @@ export const FaceName: React.FC = () => {
           return (
             <div
               key={p.id}
-              className={`bg-white rounded-2xl border p-5 shadow-sm flex flex-col items-center text-center space-y-2 ${isCorrect ? 'border-green-200' : 'border-red-200'
+              className={`glass rounded-2xl border p-5 shadow-sm flex flex-col items-center text-center space-y-2 ${isCorrect ? 'border-green-200' : 'border-red-200'
                 }`}
             >
               <PersonAvatar p={p} />
@@ -335,13 +335,13 @@ export const FaceName: React.FC = () => {
               </div>
               <div className="text-sm text-gray-500">{p.role}</div>
               <div className="text-sm mt-2">
-                <span className="font-semibold text-gray-900">{t('correct')}:</span>{' '}
+                <span className="font-semibold text-mnemo-text-base">{t('correct')}:</span>{' '}
                 <span className="font-mono">{p.name}</span>
               </div>
               <div className="text-sm">
-                <span className="font-semibold text-gray-900">{t('yourResponse')}:</span>{' '}
+                <span className="font-semibold text-mnemo-text-base">{t('yourResponse')}:</span>{' '}
                 <span
-                  className={`font-mono ${isCorrect ? 'text-green-600' : ans ? 'text-red-500' : 'text-gray-400'
+                  className={`font-mono ${isCorrect ? 'text-green-600' : ans ? 'text-red-500' : 'text-mnemo-text-muted/40'
                     }`}
                 >
                   {ans || `(${t('noDataYet').toLowerCase()})`}
