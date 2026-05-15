@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Brain, LayoutGrid, Award, Settings, LogOut, Sun, Moon, Globe, LogIn } from 'lucide-react';
+import { Brain, LayoutGrid, Award, Settings, LogOut, Sun, Moon, Globe, LogIn, BarChart2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Language } from '../services/translations';
@@ -65,10 +65,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navItems = [
     { to: '/', icon: LayoutGrid, label: t('controlCenter') },
     { to: '/monitoring', icon: Award, label: t('monitoring') },
+    { to: '/statistics', icon: BarChart2, label: t('statistics') },
   ];
 
   const languages: { code: Language; label: string }[] = [
     { code: 'uz', label: 'UZ' },
+    { code: 'qq', label: 'QQ' },
     { code: 'ru', label: 'RU' },
     { code: 'en', label: 'EN' },
   ];

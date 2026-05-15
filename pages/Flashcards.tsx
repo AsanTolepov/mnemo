@@ -20,7 +20,7 @@ type Stage = 'config' | 'study' | 'test' | 'result';
 const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 const SUITS = ['♥', '♦', '♣', '♠'];
 
-const generateCards = (count: number, lang: any): Card[] => {
+const getSortedDeck = (lang: any): Card[] => {
   const deck: Card[] = [];
   SUITS.forEach(suit => {
     RANKS.forEach(rank => {
@@ -33,13 +33,16 @@ const generateCards = (count: number, lang: any): Card[] => {
       });
     });
   });
+  return deck;
+};
 
+const generateCards = (count: number, lang: any): Card[] => {
+  const deck = getSortedDeck(lang);
   // Fisher-Yates shuffle
   for (let i = deck.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [deck[i], deck[j]] = [deck[j], deck[i]];
   }
-
   return deck.slice(0, count);
 };
 
@@ -55,7 +58,8 @@ export const Flashcards: React.FC = () => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   // Test bosqichi uchun foydalanuvchi javoblari
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [selectedSequence, setSelectedSequence] = useState<Card[]>([]);
+  const [allCards, setAllCards] = useState<Card[]>([]);
 
   const current = cards[currentIndex];
 
@@ -63,9 +67,10 @@ export const Flashcards: React.FC = () => {
     const n = Math.min(Math.max(desiredCount || 1, 1), 52);
     const generated = generateCards(n, language);
     setCards(generated);
+    setAllCards(getSortedDeck(language));
     setCurrentIndex(0);
     setIsFlipped(false);
-    setAnswers({});
+    setSelectedSequence([]);
     setStage('study');
   };
 
@@ -87,11 +92,6 @@ export const Flashcards: React.FC = () => {
     }
   };
 
-  const handleAnswerChange = (value: string) => {
-    if (!current) return;
-    setAnswers((prev) => ({ ...prev, [current.id]: value }));
-  };
-
   const saveStats = async (correct: number, total: number) => {
     if (!user) return;
     try {
@@ -107,35 +107,42 @@ export const Flashcards: React.FC = () => {
     }
   };
 
-  const goNextTest = () => {
-    if (currentIndex === cards.length - 1) {
-      const correct = cards.filter(card => {
-        const a = (answers[card.id] || '').trim().toLowerCase();
-        const w = card.word.trim().toLowerCase();
-        return a !== '' && a === w;
-      }).length;
-      saveStats(correct, cards.length);
-      setStage('result');
-    } else {
-      setCurrentIndex((i) => i + 1);
-    }
-  };
-
   const restartAll = () => {
     setStage('config');
     setCards([]);
     setCurrentIndex(0);
     setIsFlipped(false);
-    setAnswers({});
+    setSelectedSequence([]);
   };
 
-  const isCorrect = (card: Card) => {
-    const a = (answers[card.id] || '').trim().toLowerCase();
-    const w = card.word.trim().toLowerCase();
-    return a !== '' && (a === w || w.includes(a) && a.length > 2);
+  const submitTest = () => {
+    let correct = 0;
+    cards.forEach((card, idx) => {
+        if (selectedSequence[idx]?.id === card.id) {
+            correct++;
+        }
+    });
+    saveStats(correct, cards.length);
+    setStage('result');
   };
 
-  const totalCorrect = cards.filter(isCorrect).length;
+  const handleSelectCard = (card: Card) => {
+    if (selectedSequence.length < cards.length) {
+        setSelectedSequence([...selectedSequence, card]);
+    }
+  };
+
+  const handleRemoveCard = (index: number) => {
+    const newSeq = [...selectedSequence];
+    newSeq.splice(index, 1);
+    setSelectedSequence(newSeq);
+  };
+
+  const isCorrect = (index: number) => {
+    return selectedSequence[index]?.id === cards[index].id;
+  };
+
+  const totalCorrect = cards.filter((c, i) => selectedSequence[i]?.id === c.id).length;
   const progressPercent =
     cards.length > 0 ? Math.round(((currentIndex + 1) / cards.length) * 100) : 0;
 
@@ -254,60 +261,72 @@ export const Flashcards: React.FC = () => {
         </>
       )}
 
-      {stage === 'test' && current && (
-        <>
+      {stage === 'test' && (
+        <div className="space-y-8">
           <div className="flex items-baseline justify-between">
             <h2 className="text-lg font-semibold text-mnemo-text-base">{t('testStage')}</h2>
             <span className="text-sm text-mnemo-text-muted">
-              {currentIndex + 1} / {cards.length}
+              {selectedSequence.length} / {cards.length}
             </span>
           </div>
 
-          <div className="flex justify-center">
-            <div
-              className="w-64 h-96 rounded-2xl shadow-lg bg-white border-4 border-gray-100 flex flex-col items-center justify-center relative"
-              style={{ color: (current.suit === '♥' || current.suit === '♦') ? '#ef4444' : '#1f2937' }}
-            >
-              <div className="absolute top-4 left-4 text-2xl font-bold flex flex-col items-center leading-none">
-                <span>{current.rank}</span>
-                <span>{current.suit}</span>
-              </div>
-              <div className="text-8xl font-bold">{current.suit}</div>
-              <div className="absolute bottom-4 right-4 text-2xl font-bold flex flex-col items-center leading-none rotate-180">
-                <span>{current.rank}</span>
-                <span>{current.suit}</span>
-              </div>
+          <p className="text-center text-sm text-mnemo-text-muted">
+            Estelikti tekseriw ushın kartalardı izbe-izlikte tańlań. Alıw ushın orınlanǵan kartaǵa basıń.
+          </p>
+
+          {/* Empty slots for selected cards */}
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {cards.map((_, i) => {
+              const selCard = selectedSequence[i];
+              if (selCard) {
+                return (
+                  <div
+                    key={i}
+                    onClick={() => handleRemoveCard(i)}
+                    className="w-16 h-24 rounded-lg shadow-md bg-white border-2 border-gray-100 flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform"
+                    style={{ color: (selCard.suit === '♥' || selCard.suit === '♦') ? '#ef4444' : '#1f2937' }}
+                  >
+                    <div className="text-sm font-bold leading-none">{selCard.rank}</div>
+                    <div className="text-2xl font-bold">{selCard.suit}</div>
+                  </div>
+                );
+              } else {
+                return (
+                  <div
+                    key={i}
+                    className="w-16 h-24 rounded-lg bg-black/5 border-2 border-dashed border-mnemo-border flex items-center justify-center"
+                  >
+                    <span className="text-mnemo-text-muted/30 text-xs font-bold">{i + 1}</span>
+                  </div>
+                );
+              }
+            })}
+          </div>
+
+          {/* 52 Cards Selection Grid */}
+          <div className="bg-mnemo-card rounded-2xl border border-mnemo-border shadow-sm p-4 glass">
+            <div className="grid grid-cols-7 md:grid-cols-13 gap-1 md:gap-2 justify-items-center">
+              {allCards.map(card => (
+                <button
+                  key={card.id}
+                  onClick={() => handleSelectCard(card)}
+                  disabled={selectedSequence.length >= cards.length}
+                  className="w-10 h-14 md:w-12 md:h-16 rounded shadow-sm bg-white border border-gray-200 flex flex-col items-center justify-center hover:-translate-y-1 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ color: (card.suit === '♥' || card.suit === '♦') ? '#ef4444' : '#1f2937' }}
+                >
+                  <div className="text-[10px] md:text-xs font-bold leading-none">{card.rank}</div>
+                  <div className="text-sm md:text-lg">{card.suit}</div>
+                </button>
+              ))}
             </div>
           </div>
 
-          <div className="space-y-2 max-w-sm mx-auto w-full">
-            <label className="text-sm text-mnemo-text-muted block text-center uppercase tracking-widest font-bold">
-              {t('writeWord')}
-            </label>
-            <input
-              type="text"
-              value={answers[current.id] || ''}
-              onChange={(e) => handleAnswerChange(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-mnemo-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-mnemo-primary text-center font-bold text-lg text-mnemo-text-base shadow-inner"
-              placeholder={t('enterWord')}
-              autoFocus
-              onKeyPress={(e) => e.key === 'Enter' && goNextTest()}
-            />
-          </div>
-
-          <div className="flex items-center justify-center gap-4">
-            <Button onClick={goNextTest}>
-              {currentIndex === cards.length - 1 ? t('seeResult') : t('next')}
+          <div className="flex items-center justify-center gap-4 mt-6">
+            <Button onClick={submitTest} disabled={selectedSequence.length < cards.length}>
+              {t('seeResult')}
             </Button>
           </div>
-
-          <div className="w-full bg-mnemo-border h-2 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-mnemo-primary rounded-full transition-all duration-300"
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
-        </>
+        </div>
       )}
 
       {stage === 'result' && (
@@ -344,30 +363,44 @@ export const Flashcards: React.FC = () => {
               Tahlil
             </h3>
             <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-              {cards.map((card) => {
-                const correct = isCorrect(card);
+              {cards.map((card, i) => {
+                const correct = isCorrect(i);
+                const userCard = selectedSequence[i];
                 return (
                   <div
-                    key={card.id}
+                    key={i}
                     className="flex items-center justify-between p-4 rounded-2xl border border-mnemo-border hover:bg-white/5 transition-colors"
                   >
-                    <div className="flex items-center gap-4">
-                      <div
-                        className="w-12 h-16 rounded-xl bg-white border border-gray-200 flex flex-col items-center justify-center font-bold text-xs shadow-sm"
-                        style={{ color: (card.suit === '♥' || card.suit === '♦') ? '#ef4444' : '#1f2937' }}
-                      >
-                        <div>{card.rank}</div>
-                        <div>{card.suit}</div>
+                    <div className="flex items-center gap-6">
+                      <div className="flex flex-col items-center">
+                         <span className="text-xs text-mnemo-text-muted font-bold mb-1">Tuwrı</span>
+                         <div
+                           className="w-12 h-16 rounded-xl bg-white border border-gray-200 flex flex-col items-center justify-center font-bold text-xs shadow-sm"
+                           style={{ color: (card.suit === '♥' || card.suit === '♦') ? '#ef4444' : '#1f2937' }}
+                         >
+                           <div>{card.rank}</div>
+                           <div>{card.suit}</div>
+                         </div>
                       </div>
-                      <div>
+                      <div className="flex flex-col items-center">
+                         <span className="text-xs text-mnemo-text-muted font-bold mb-1">Sizdiń juwap</span>
+                         {userCard ? (
+                             <div
+                               className={`w-12 h-16 rounded-xl bg-white border-2 flex flex-col items-center justify-center font-bold text-xs shadow-sm ${correct ? 'border-green-500' : 'border-red-500'}`}
+                               style={{ color: (userCard.suit === '♥' || userCard.suit === '♦') ? '#ef4444' : '#1f2937' }}
+                             >
+                               <div>{userCard.rank}</div>
+                               <div>{userCard.suit}</div>
+                             </div>
+                         ) : (
+                             <div className="w-12 h-16 rounded-xl bg-black/5 border-2 border-dashed border-red-500 flex flex-col items-center justify-center font-bold text-xs text-red-500">
+                               -
+                             </div>
+                         )}
+                      </div>
+                      <div className="hidden sm:block">
                         <div className="text-mnemo-text-base font-bold">
-                          {t('writeWord')}: {card.word}
-                        </div>
-                        <div className="text-mnemo-text-muted text-sm">
-                          {user ? user.displayName : 'Guest'}:{' '}
-                          <span className={correct ? 'text-green-500 font-bold' : 'text-red-400 font-bold'}>
-                            {answers[card.id] ? answers[card.id] : '—'}
-                          </span>
+                          {card.word}
                         </div>
                       </div>
                     </div>

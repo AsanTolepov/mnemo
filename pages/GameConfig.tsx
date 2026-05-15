@@ -57,77 +57,64 @@ export const GameConfig: React.FC = () => {
           <div className="space-y-6">
             <div className="flex justify-between items-end">
               <span className="text-[10px] font-black text-mnemo-text-muted uppercase tracking-widest">MIN: 4</span>
-              <div className="text-center">
-                <span className="text-5xl font-black text-mnemo-text-base tabular-nums">
-                  {config.digitCount}
-                </span>
-                <div className="text-[10px] font-bold text-mnemo-primary uppercase tracking-widest mt-1">{t('digitCountLabel').toLowerCase()}</div>
+              <div className="text-center w-full max-w-[200px] mx-auto">
+                <input
+                  type="number"
+                  min="4"
+                  max="500"
+                  value={config.digitCount || ''}
+                  onChange={(e) => setConfig({ ...config, digitCount: parseInt(e.target.value, 10) || 0 })}
+                  onBlur={(e) => {
+                      let val = parseInt(e.target.value, 10) || 10;
+                      if (val < 4) val = 4;
+                      if (val > 500) val = 500;
+                      setConfig({ ...config, digitCount: val });
+                  }}
+                  className="w-full text-center text-4xl md:text-5xl font-black text-mnemo-text-base tabular-nums bg-transparent border-b-2 border-mnemo-border focus:border-mnemo-primary focus:outline-none py-2"
+                />
+                <div className="text-[10px] font-bold text-mnemo-primary uppercase tracking-widest mt-2">{t('digitCountLabel').toLowerCase()}</div>
               </div>
-              <span className="text-[10px] font-black text-mnemo-text-muted uppercase tracking-widest">MAX: 50</span>
+              <span className="text-[10px] font-black text-mnemo-text-muted uppercase tracking-widest">MAX: 500</span>
             </div>
-            <input
-              type="range"
-              min="4"
-              max="50"
-              step="2"
-              value={config.digitCount}
-              onChange={(e) =>
-                setConfig({ ...config, digitCount: parseInt(e.target.value, 10) })
-              }
-              className="w-full h-1.5 bg-mnemo-text-base/5 rounded-full appearance-none cursor-pointer accent-mnemo-primary border border-mnemo-border"
-            />
           </div>
         </ConfigSection>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <ConfigSection title={t('groupingLabel')} icon={Grid3X3}>
-            <div className="grid grid-cols-3 gap-3">
-              {[2, 3, 4].map((size) => (
-                <button
-                  key={size}
-                  onClick={() => setConfig({ ...config, groupSize: size })}
-                  className={`py-5 rounded-2xl border-2 transition-all font-mono font-black text-xs uppercase tracking-widest
-                      ${config.groupSize === size
-                      ? 'border-mnemo-primary bg-mnemo-primary/20 text-mnemo-primary shadow-[0_0_20px_rgba(249,115,22,0.2)]'
-                      : 'border-mnemo-border bg-mnemo-text-base/5 text-mnemo-text-muted hover:border-mnemo-primary/20'
-                    }`}
-                >
-                  {size === 2 ? 'XX' : size === 3 ? 'XXX' : 'XXXX'}
-                </button>
-              ))}
+            <div className="flex flex-col items-center justify-center">
+                <input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={config.groupSize || ''}
+                  onChange={(e) => setConfig({ ...config, groupSize: parseInt(e.target.value, 10) || 0 })}
+                  onBlur={(e) => {
+                      let val = parseInt(e.target.value, 10) || 2;
+                      if (val < 1) val = 1;
+                      setConfig({ ...config, groupSize: val });
+                  }}
+                  className="w-24 text-center text-4xl font-black font-mono text-mnemo-text-base bg-transparent border-b-2 border-mnemo-border focus:border-mnemo-primary focus:outline-none py-2"
+                />
+                <div className="text-[10px] font-bold text-mnemo-primary uppercase tracking-widest mt-2">{t('groupingLabel')}</div>
             </div>
           </ConfigSection>
 
           <ConfigSection title={`${t('durationLabel')} / ${t('speed')}`} icon={Clock}>
-            <div className="flex items-center justify-between gap-4">
-              <button
-                onClick={() =>
-                  setConfig({
-                    ...config,
-                    durationSeconds: Math.max(5, config.durationSeconds - 5)
-                  })
-                }
-                className="w-14 h-14 rounded-2xl border-2 border-mnemo-border glass shadow-xl flex items-center justify-center text-mnemo-primary hover:border-mnemo-primary transition-all font-black text-2xl"
-              >
-                -
-              </button>
-              <div className="text-center">
-                <span className="text-4xl font-black font-mono text-mnemo-text-base tabular-nums">
-                  {config.durationSeconds}
-                </span>
-                <div className="text-[10px] font-bold text-mnemo-primary uppercase tracking-widest mt-1">{t('seconds')}</div>
-              </div>
-              <button
-                onClick={() =>
-                  setConfig({
-                    ...config,
-                    durationSeconds: config.durationSeconds + 5
-                  })
-                }
-                className="w-14 h-14 rounded-2xl border-2 border-mnemo-border glass shadow-xl flex items-center justify-center text-mnemo-primary hover:border-mnemo-primary transition-all font-black text-2xl"
-              >
-                +
-              </button>
+            <div className="flex flex-col items-center justify-center">
+                <input
+                  type="number"
+                  min="1"
+                  max="3600"
+                  value={config.durationSeconds || ''}
+                  onChange={(e) => setConfig({ ...config, durationSeconds: parseInt(e.target.value, 10) || 0 })}
+                  onBlur={(e) => {
+                      let val = parseInt(e.target.value, 10) || 15;
+                      if (val < 1) val = 1;
+                      setConfig({ ...config, durationSeconds: val });
+                  }}
+                  className="w-32 text-center text-4xl font-black font-mono text-mnemo-text-base bg-transparent border-b-2 border-mnemo-border focus:border-mnemo-primary focus:outline-none py-2"
+                />
+                <div className="text-[10px] font-bold text-mnemo-primary uppercase tracking-widest mt-2">{t('seconds')}</div>
             </div>
           </ConfigSection>
         </div>

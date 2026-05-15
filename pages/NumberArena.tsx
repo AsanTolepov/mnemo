@@ -161,9 +161,9 @@ export const NumberArena: React.FC = () => {
         </div>
 
         {/* The Grid */}
-        <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-x-10 md:gap-x-16 gap-y-8 md:gap-y-12 animate-slideIn relative z-10">
+        <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-x-6 md:gap-x-10 gap-y-6 md:gap-y-8 animate-slideIn relative z-10 max-h-[60vh] overflow-y-auto p-4 custom-scrollbar">
           {getChunkedDisplay(numbers).map((chunk, idx) => (
-            <span key={idx} className="font-mono text-7xl md:text-9xl font-black text-mnemo-text-base tracking-tighter hover:text-mnemo-primary transition-colors cursor-default drop-shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
+            <span key={idx} className={`font-mono font-black text-mnemo-text-base tracking-tighter hover:text-mnemo-primary transition-colors cursor-default drop-shadow-[0_10px_30px_rgba(0,0,0,0.2)] ${config.digitCount > 200 ? 'text-3xl md:text-5xl' : config.digitCount > 50 ? 'text-5xl md:text-7xl' : 'text-7xl md:text-9xl'}`}>
               {chunk}
             </span>
           ))}
@@ -190,19 +190,36 @@ export const NumberArena: React.FC = () => {
         </div>
 
         <div className="w-full relative group">
-          <input
-            ref={inputRef}
-            type="text"
-            pattern="[0-9]*"
-            inputMode="numeric"
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value.replace(/[^0-9]/g, ''))}
-            className="w-full bg-transparent border-b-4 border-white/10 focus:border-mnemo-primary outline-none text-center font-mono text-6xl md:text-8xl py-10 text-mnemo-text-base placeholder-mnemo-text-base/10 transition-all duration-500 tracking-[0.1em]"
-            placeholder={Array(config.digitCount).fill('•').join('')}
-            autoComplete="off"
-            maxLength={config.digitCount}
-            onKeyDown={(e) => e.key === 'Enter' && userInput.length === config.digitCount && submitResults()}
-          />
+          {config.digitCount > 40 ? (
+            <textarea
+              ref={inputRef as any}
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value.replace(/[^0-9]/g, ''))}
+              className={`w-full bg-transparent border-4 border-white/10 rounded-2xl focus:border-mnemo-primary outline-none font-mono py-6 px-6 text-mnemo-text-base placeholder-mnemo-text-base/10 transition-all duration-500 tracking-[0.1em] resize-none ${config.digitCount > 200 ? 'text-3xl h-64' : 'text-4xl h-48'} custom-scrollbar`}
+              placeholder={Array(Math.min(config.digitCount, 100)).fill('•').join('') + (config.digitCount > 100 ? '...' : '')}
+              maxLength={config.digitCount}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey && userInput.length === config.digitCount) {
+                  e.preventDefault();
+                  submitResults();
+                }
+              }}
+            />
+          ) : (
+            <input
+              ref={inputRef}
+              type="text"
+              pattern="[0-9]*"
+              inputMode="numeric"
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value.replace(/[^0-9]/g, ''))}
+              className="w-full bg-transparent border-b-4 border-white/10 focus:border-mnemo-primary outline-none text-center font-mono text-6xl md:text-8xl py-10 text-mnemo-text-base placeholder-mnemo-text-base/10 transition-all duration-500 tracking-[0.1em]"
+              placeholder={Array(config.digitCount).fill('•').join('')}
+              autoComplete="off"
+              maxLength={config.digitCount}
+              onKeyDown={(e) => e.key === 'Enter' && userInput.length === config.digitCount && submitResults()}
+            />
+          )}
           <div className="absolute bottom-0 left-0 h-1 bg-mnemo-primary transition-all duration-500 shadow-[0_0_20px_rgba(249,115,22,0.5)]"
             style={{ width: `${(userInput.length / config.digitCount) * 100}%` }} />
         </div>
@@ -256,13 +273,13 @@ export const NumberArena: React.FC = () => {
           <div className="space-y-10">
             <div className="space-y-4">
               <span className="text-[10px] font-black text-mnemo-text-muted uppercase tracking-[0.2em] block">{t('originalSequence')}:</span>
-              <div className="font-mono text-3xl md:text-5xl tracking-tight text-white/90 break-all leading-none">
+              <div className={`font-mono tracking-tight text-white/90 break-all leading-none ${config.digitCount > 200 ? 'text-xl md:text-3xl' : config.digitCount > 50 ? 'text-2xl md:text-4xl' : 'text-3xl md:text-5xl'}`}>
                 {getChunkedDisplay(numbers).join(' ')}
               </div>
             </div>
             <div className="space-y-4">
               <span className="text-[10px] font-black text-mnemo-text-muted uppercase tracking-[0.2em] block">{t('yourResponse')}:</span>
-              <div className="font-mono text-3xl md:text-5xl tracking-tight break-all leading-none">
+              <div className={`font-mono tracking-tight break-all leading-none ${config.digitCount > 200 ? 'text-xl md:text-3xl' : config.digitCount > 50 ? 'text-2xl md:text-4xl' : 'text-3xl md:text-5xl'}`}>
                 {userInput.split('').map((char, i) => (
                   <span key={i} className={char === numbers[i] ? 'text-green-400' : 'text-red-500 line-through decoration-4'}>
                     {char}

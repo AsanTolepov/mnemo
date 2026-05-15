@@ -14,6 +14,7 @@ import { FaceName } from './pages/FaceName';
 import { AbstractImages } from './pages/AbstractImages';
 
 import { Monitoring } from './pages/Monitoring';
+import { Statistics } from './pages/Statistics';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/monitoring" element={<Monitoring />} />
+          <Route path="/statistics" element={<Statistics />} />
 
           {/* Number Matrix */}
           <Route path="/train/numbers/config" element={<GameConfig />} />

@@ -15,118 +15,90 @@ interface Person {
   imageUrl?: string;   // yangi: internetdan kelgan rasm
 }
 
-const ROLES = [
-  'Pilot',
-  'Doctor',
-  'Chef',
-  'Designer',
-  'Engineer',
-  'Musician',
-  'Photographer',
-  'Teacher'
+const PREDEFINED_PEOPLE = [
+  // 10 Men
+  { id: 1, imageUrl: 'https://randomuser.me/api/portraits/men/11.jpg', role: 'Pilot', color: '#f97316', names: { uz: 'Aziz', qq: 'Azamat', tr: 'Ahmet', ru: 'Ivan', en: 'James' } },
+  { id: 2, imageUrl: 'https://randomuser.me/api/portraits/men/22.jpg', role: 'Doctor', color: '#3b82f6', names: { uz: 'Sardor', qq: 'Nurlan', tr: 'Mehmet', ru: 'Alexey', en: 'John' } },
+  { id: 3, imageUrl: 'https://randomuser.me/api/portraits/men/33.jpg', role: 'Chef', color: '#22c55e', names: { uz: 'Timur', qq: 'Aybek', tr: 'Mustafa', ru: 'Dmitry', en: 'Robert' } },
+  { id: 4, imageUrl: 'https://randomuser.me/api/portraits/men/44.jpg', role: 'Designer', color: '#a855f7', names: { uz: 'Otabek', qq: 'Batir', tr: 'Emre', ru: 'Sergey', en: 'Michael' } },
+  { id: 5, imageUrl: 'https://randomuser.me/api/portraits/men/55.jpg', role: 'Engineer', color: '#ec4899', names: { uz: 'Jasur', qq: 'Jaras', tr: 'Burak', ru: 'Mikhail', en: 'William' } },
+  { id: 6, imageUrl: 'https://randomuser.me/api/portraits/men/66.jpg', role: 'Musician', color: '#f59e0b', names: { uz: 'Rustam', qq: 'Bawirjan', tr: 'Can', ru: 'Pavel', en: 'David' } },
+  { id: 7, imageUrl: 'https://randomuser.me/api/portraits/men/77.jpg', role: 'Photographer', color: '#06b6d4', names: { uz: 'Dilshod', qq: 'Dáwlet', tr: 'Cem', ru: 'Vladimir', en: 'Richard' } },
+  { id: 8, imageUrl: 'https://randomuser.me/api/portraits/men/88.jpg', role: 'Teacher', color: '#10b981', names: { uz: 'Javohir', qq: 'Miyirbek', tr: 'Ali', ru: 'Igor', en: 'Joseph' } },
+  { id: 9, imageUrl: 'https://randomuser.me/api/portraits/men/91.jpg', role: 'Scientist', color: '#6366f1', names: { uz: 'Ulugbek', qq: 'Sultan', tr: 'Deniz', ru: 'Oleg', en: 'Thomas' } },
+  { id: 10, imageUrl: 'https://randomuser.me/api/portraits/men/94.jpg', role: 'Writer', color: '#14b8a6', names: { uz: 'Farhod', qq: 'Quwat', tr: 'Ozan', ru: 'Maxim', en: 'Charles' } },
+  // 10 Women
+  { id: 11, imageUrl: 'https://randomuser.me/api/portraits/women/11.jpg', role: 'Pilot', color: '#f97316', names: { uz: 'Malika', qq: 'Gulina', tr: 'Ayşe', ru: 'Anna', en: 'Mary' } },
+  { id: 12, imageUrl: 'https://randomuser.me/api/portraits/women/22.jpg', role: 'Doctor', color: '#3b82f6', names: { uz: 'Shahnoza', qq: 'Ayjamal', tr: 'Fatma', ru: 'Maria', en: 'Patricia' } },
+  { id: 13, imageUrl: 'https://randomuser.me/api/portraits/women/33.jpg', role: 'Chef', color: '#22c55e', names: { uz: 'Nargiza', qq: 'Ziba', tr: 'Zeynep', ru: 'Elena', en: 'Jennifer' } },
+  { id: 14, imageUrl: 'https://randomuser.me/api/portraits/women/44.jpg', role: 'Designer', color: '#a855f7', names: { uz: 'Dildora', qq: 'Aygúl', tr: 'Elif', ru: 'Olga', en: 'Linda' } },
+  { id: 15, imageUrl: 'https://randomuser.me/api/portraits/women/55.jpg', role: 'Engineer', color: '#ec4899', names: { uz: 'Madina', qq: 'Jazira', tr: 'Merve', ru: 'Natalia', en: 'Elizabeth' } },
+  { id: 16, imageUrl: 'https://randomuser.me/api/portraits/women/66.jpg', role: 'Musician', color: '#f59e0b', names: { uz: 'Guli', qq: 'Gúlnara', tr: 'Ece', ru: 'Yulia', en: 'Barbara' } },
+  { id: 17, imageUrl: 'https://randomuser.me/api/portraits/women/77.jpg', role: 'Photographer', color: '#06b6d4', names: { uz: 'Sevinch', qq: 'Nargis', tr: 'Banu', ru: 'Svetlana', en: 'Susan' } },
+  { id: 18, imageUrl: 'https://randomuser.me/api/portraits/women/88.jpg', role: 'Teacher', color: '#10b981', names: { uz: 'Laylo', qq: 'Ziyada', tr: 'Cansu', ru: 'Irina', en: 'Jessica' } },
+  { id: 19, imageUrl: 'https://randomuser.me/api/portraits/women/91.jpg', role: 'Scientist', color: '#6366f1', names: { uz: 'Zuhra', qq: 'Aysulu', tr: 'Derya', ru: 'Tatiana', en: 'Sarah' } },
+  { id: 20, imageUrl: 'https://randomuser.me/api/portraits/women/94.jpg', role: 'Writer', color: '#14b8a6', names: { uz: 'Iroda', qq: 'Sáwle', tr: 'Pelin', ru: 'Ekaterina', en: 'Karen' } },
 ];
 
-const COLORS = [
-  '#f97316',
-  '#3b82f6',
-  '#22c55e',
-  '#a855f7',
-  '#ec4899',
-  '#f59e0b',
-  '#06b6d4',
-  '#10b981'
-];
-
-// Fallback pool (agar internetdan rasm kelmasa)
-const PEOPLE_POOL: Person[] = [
-  { id: 1, name: 'Liam', role: 'Pilot', color: '#f97316' },
-  { id: 2, name: 'Emma', role: 'Doctor', color: '#3b82f6' },
-  { id: 3, name: 'Noah', role: 'Chef', color: '#22c55e' },
-  { id: 4, name: 'Olivia', role: 'Designer', color: '#a855f7' },
-  { id: 5, name: 'Ethan', role: 'Engineer', color: '#ec4899' },
-  { id: 6, name: 'Ava', role: 'Musician', color: '#f59e0b' },
-  { id: 7, name: 'Mason', role: 'Photographer', color: '#06b6d4' },
-  { id: 8, name: 'Sophia', role: 'Teacher', color: '#10b981' }
-];
-
-const MEMORIZE_SECONDS = 25;
-const PERSON_COUNT = 4;
-
-// Fallback – rangli doira avatarlar
-const pickRandomPeopleFromPool = (): Person[] => {
-  const shuffled = [...PEOPLE_POOL].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, PERSON_COUNT);
-};
-
-// Internetdan tasodifiy odamlar olish
-const fetchRandomPeople = async (): Promise<Person[]> => {
-  const url = `https://randomuser.me/api/?results=${PERSON_COUNT}&inc=name,picture&nat=us,gb,ca,au`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('Failed to fetch people');
-  const data = await res.json();
-
-  const results = data.results as Array<{
-    name: { first: string };
-    picture: { large: string };
-  }>;
-
-  return results.map((r, index) => ({
-    id: index + 1,
-    name: r.name.first, // faqat ismi
-    role: ROLES[index % ROLES.length],
-    color: COLORS[index % COLORS.length],
-    imageUrl: r.picture.large
-  }));
+const pickRandomPeopleFromPool = (count: number, lang: string): Person[] => {
+  const shuffled = [...PREDEFINED_PEOPLE].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, count).map(p => {
+      const localizedName = (p.names as any)[lang] || p.names.en;
+      return {
+          id: p.id,
+          name: localizedName,
+          role: p.role,
+          color: p.color,
+          imageUrl: p.imageUrl
+      };
+  });
 };
 
 export const FaceName: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [state, setState] = useState<GameState>(GameState.PREPARE);
   const [people, setPeople] = useState<Person[]>([]);
-  const [timeLeft, setTimeLeft] = useState(MEMORIZE_SECONDS);
+  const [timeLeft, setTimeLeft] = useState(25);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [score, setScore] = useState<number | null>(null);
+  const [personCount, setPersonCount] = useState<number>(4);
+  const [memorizeSeconds, setMemorizeSeconds] = useState<number>(30);
   const [loading, setLoading] = useState(false);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Boshlang‘ich yuzlarni yuklash
   useEffect(() => {
-    loadPeople();
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const loadPeople = async () => {
+  const loadPeople = async (count: number) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const onlinePeople = await fetchRandomPeople();
-      setPeople(onlinePeople);
-    } catch (e) {
-      // agar internet yoki API ishlamasa – fallback
-      setPeople(pickRandomPeopleFromPool());
+      await new Promise(resolve => setTimeout(resolve, 400));
+      setPeople(pickRandomPeopleFromPool(count, language));
     } finally {
       setLoading(false);
     }
   };
 
-  const restartRound = async () => {
+  const restartRound = () => {
     if (timerRef.current) clearInterval(timerRef.current);
-    await loadPeople();
     setAnswers({});
-    setTimeLeft(MEMORIZE_SECONDS);
+    setTimeLeft(25);
     setScore(null);
     setState(GameState.PREPARE);
   };
 
-  const startMemorize = () => {
-    if (!people.length) return;
+  const startMemorize = async () => {
+    const finalCount = Math.max(1, Math.min(personCount, 20));
+    await loadPeople(finalCount);
+    
     setState(GameState.MEMORIZE);
-    setTimeLeft(MEMORIZE_SECONDS);
+    setTimeLeft(memorizeSeconds);
 
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
@@ -169,19 +141,20 @@ export const FaceName: React.FC = () => {
   const initialOf = (name: string) => name.charAt(0).toUpperCase();
 
   // Avatar: internetdan kelgan rasm bo‘lsa – img, bo‘lmasa eski rangli doira
-  const PersonAvatar: React.FC<{ p: Person }> = ({ p }) => {
+  const PersonAvatar: React.FC<{ p: Person, large?: boolean }> = ({ p, large = false }) => {
+    const sizeClasses = large ? "w-32 h-32 md:w-48 md:h-48 text-6xl" : "w-24 h-24 md:w-32 md:h-32 text-4xl";
     if (p.imageUrl) {
       return (
         <img
           src={p.imageUrl}
           alt={p.name}
-          className="w-16 h-16 rounded-full object-cover shadow"
+          className={`${sizeClasses} rounded-full object-cover shadow-xl border-4 border-white`}
         />
       );
     }
     return (
       <div
-        className="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow"
+        className={`${sizeClasses} rounded-full flex items-center justify-center text-white font-bold shadow-xl border-4 border-white`}
         style={{ backgroundColor: p.color }}
       >
         {initialOf(p.name)}
@@ -213,16 +186,64 @@ export const FaceName: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-mnemo-text-base/5 p-6 rounded-2xl border border-mnemo-text-base/10 shadow-sm space-y-3">
-          <p className="text-mnemo-text-base/60">
-            {t('faceNameRule')}
-          </p>
-          <p className="text-mnemo-text-muted text-sm">
-            {t('faceNameHint')}
-          </p>
+        <div className="bg-mnemo-text-base/5 p-6 rounded-2xl border border-mnemo-text-base/10 shadow-sm space-y-6">
+          <div>
+            <p className="text-mnemo-text-base/60 mb-2">
+              {t('faceNameRule')}
+            </p>
+            <p className="text-mnemo-text-muted text-sm">
+              {t('faceNameHint')}
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            {/* Person Count */}
+            <div className="flex flex-col items-center justify-center gap-3 bg-white/5 p-5 rounded-xl border border-white/10">
+              <label className="text-xs font-bold uppercase tracking-widest text-mnemo-text-muted text-center">
+                {t('personLabel')} sań (max 20)
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="20"
+                value={personCount || ''}
+                onChange={(e) => setPersonCount(parseInt(e.target.value, 10) || 0)}
+                onBlur={(e) => {
+                    let val = parseInt(e.target.value, 10) || 4;
+                    if (val < 1) val = 1;
+                    if (val > 20) val = 20;
+                    setPersonCount(val);
+                }}
+                className="w-24 px-3 py-2 bg-transparent border-b-2 border-mnemo-border focus:border-mnemo-primary text-center font-bold text-3xl text-mnemo-text-base outline-none transition-colors"
+              />
+              <span className="text-xs text-mnemo-text-muted">{t('personLabel')}</span>
+            </div>
+
+            {/* Time Input */}
+            <div className="flex flex-col items-center justify-center gap-3 bg-white/5 p-5 rounded-xl border border-white/10">
+              <label className="text-xs font-bold uppercase tracking-widest text-mnemo-text-muted text-center">
+                {t('durationLabel')}
+              </label>
+              <input
+                type="number"
+                min="5"
+                max="600"
+                value={memorizeSeconds || ''}
+                onChange={(e) => setMemorizeSeconds(parseInt(e.target.value, 10) || 0)}
+                onBlur={(e) => {
+                    let val = parseInt(e.target.value, 10) || 30;
+                    if (val < 5) val = 5;
+                    if (val > 600) val = 600;
+                    setMemorizeSeconds(val);
+                }}
+                className="w-24 px-3 py-2 bg-transparent border-b-2 border-mnemo-border focus:border-mnemo-primary text-center font-bold text-3xl text-mnemo-text-base outline-none transition-colors"
+              />
+              <span className="text-xs text-mnemo-text-muted">{t('seconds')}</span>
+            </div>
+          </div>
         </div>
 
-        <Button onClick={startMemorize} size="lg" disabled={loading || !people.length}>
+        <Button onClick={startMemorize} size="lg" disabled={loading || !personCount}>
           {loading ? t('loadingFaces') : t('startPractice')}
         </Button>
       </div>
@@ -249,9 +270,9 @@ export const FaceName: React.FC = () => {
           {people.map((p, idx) => (
             <div
               key={p.id}
-              className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col items-center text-center space-y-2"
+              className="bg-white rounded-3xl border border-gray-100 shadow-lg p-6 flex flex-col items-center text-center space-y-4 hover:shadow-xl transition-shadow"
             >
-              <PersonAvatar p={p} />
+              <PersonAvatar p={p} large />
               <div className="text-xs uppercase tracking-[0.25em] text-gray-400">
                 {t('personLabel')} {String.fromCharCode(65 + idx)}
               </div>
@@ -282,9 +303,9 @@ export const FaceName: React.FC = () => {
           {people.map((p, idx) => (
             <div
               key={p.id}
-              className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col items-center text-center space-y-3"
+              className="bg-white rounded-3xl border border-gray-100 shadow-lg p-6 flex flex-col items-center text-center space-y-4 hover:shadow-xl transition-shadow"
             >
-              <PersonAvatar p={p} />
+              <PersonAvatar p={p} large />
               <div className="text-xs uppercase tracking-[0.25em] text-gray-400">
                 {t('personLabel')} {String.fromCharCode(65 + idx)}
               </div>
